@@ -176,7 +176,7 @@ function viewCar(carID) {
         carElements += "        <div class=\"modal-content\">";
         carElements += "                            <div class=\"modal-content modal-text\">";
         carElements += "                                <h5>";
-        carElements += car.year + " " + car.make + " " + car.model;
+        carElements += car.year + " " + car.make + " " + car.model + " " + car.price;
         carElements += "<\/h5>";
         carElements += "                                <p class=\"flow-text\">";
         carElements += "                                    Doors: ";
@@ -219,7 +219,7 @@ function viewCar(carID) {
     }
 
     function initializeModal() {
-        var carModel = $('#'+car.id);
+        const carModel = $('#' + car.id);
         $('.modal').modal();
         configureModalOptions();
         carModel.modal('open');
@@ -315,5 +315,11 @@ function searchTextBoxListener() {
         allCars = matchingCars;
         showAllCars();
         loadPreLoadedCarImages();
+    });
+}
+
+function scrollToInventory() {
+    $('html,body').animate({
+        scrollTop: $(".cars-container").offset().top - 10
     });
 }

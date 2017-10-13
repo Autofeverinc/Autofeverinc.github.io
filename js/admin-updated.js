@@ -225,10 +225,6 @@ function showAllCars() {
 
 function addChip() {
     var input = document.createElement('input');
-    input.type = 'file';
-    input.multiple = true;
-    input.accept = "\"image/*\"";
-    input.click();
     input.addEventListener('change', function(e){
         //Get files
         var chipImageElement="";
@@ -250,6 +246,11 @@ function addChip() {
 
         chipImages.append(chipImageElement);
     });
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = "\"image/*\"";
+    input.click();
+
 }
 
 
@@ -703,10 +704,9 @@ function showCarEditErrorMessage(message) {
 }
 
 function setProgressBarPercent(percent) {
-    var progessBar = $('.image-upload');
-    progessBar.parent().removeClass("hide");
+    var progessBar = $('#control-panel-text');
+    progessBar.html("Control Panel - Uploading... " + percent + "%");
     if(percent > 99){
-        progessBar.parent().addClass("hide");
+        progessBar.html("Control Panel");
     }
-    progessBar.width(percent + '%');
 }
