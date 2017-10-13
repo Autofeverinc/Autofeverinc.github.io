@@ -1,0 +1,177 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="manifest" href="site.webmanifest">
+        <link rel="apple-touch-icon" href="icon.png">
+        <!-- Place favicon.ico in the root directory -->
+
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <main>
+        <body>
+        <!--[if lte IE 9]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+
+        <div class="progress grey">
+            <div class="indeterminate grey lighten-3"></div>
+        </div>
+
+        <div class="container full-container">
+
+            <div class="row navbarMobile">
+                <div class="hide-on-med-and-up">
+                    <div class="col l5 s12">
+                        <h5><img class="responsive-img circle navbar" src="http://via.placeholder.com/75x75">AutoFever inc.™</h5>
+                    </div>
+                </div>
+                <div class="hide-on-med-and-down show-on-medium-and-up">
+                    <div class="col l6 s12">
+                        <h4><img class="responsive-img circle navbar" src="http://via.placeholder.com/75x75">AutoFever inc.™</h4>
+                    </div>
+                </div>
+
+
+                <div class="col push-l6 m6 s6">
+                    <div class="hide-on-large-only">
+                        <h5 class="left-align" onclick="scrollToCars()"><a href="!#" class="black-text">Inventory</a> </h5>
+                    </div>
+                </div>
+
+                <div class="col push-l6 push-s2 push-m4 m6 s6">
+                    <h5 class="contact-button" ><a href="!#" class="black-text">Contact</a></h5>
+                </div>
+                <div class="hide-on-med-and-down">
+                    <div class="col push-l6 m6 s6">
+                        <h5 onclick="scrollToCars()"><a href="!#" class="black-text">Inventory</a> </h5>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row search">
+                <div class="col s12">
+                    <div class="input-field col s12">
+                        <input id="search" type="search" >
+                        <label for="search">Search</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="cars-container">
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+            <div class="car-modal">
+                <div id="modal1" class="modal modal-fixed-footer">
+                    <div class="modal-content">
+                            <div class="modal-text">
+                                <h5>2017 Ford Focus</h5>
+                                <p class="flow-text">
+                                    Doors: doors <br>
+                                    VIN: vin<br>
+                                    Color: color<br>
+                                    Mileage: mileage<br>
+                                    Transmission: trans<br>
+                                    Features: features
+                                </p>
+
+                            </div>
+                        <div class="carousel carousel-slider car-images" data-indicators="true">
+                                <div class="carousel-fixed-item center white-text" >
+                                    Click or Swipe to see the next images
+                                </div>
+
+                                <a class="carousel-item" href="#one!"><img src="http://via.placeholder.com/200x200"></a>
+                                <a class="carousel-item" href="#two!"><img src="http://via.placeholder.com/1000x1000"></a>
+                                <a class="carousel-item" href="#three!"><img src="http://via.placeholder.com/1000x1000"></a>
+                                <a class="carousel-item" href="#four!"><img src="http://via.placeholder.com/1000x1000"></a>
+                            </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat left-align ">GO BACK</a>
+                        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">CALL</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+        </div>
+        <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+        <script src="js/vendor/modernizr-3.5.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+        <script>
+            window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+            ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
+        </script>
+        <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+
+
+        </body>
+
+
+    </main>
+    <footer class="page-footer black">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">AutoFever inc.™</h5>
+                    <p class="grey-text text-lighten-4">
+
+                        <!--Some footer contents not written yet-->
+
+                    </p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#!">Contact</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Inventory</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                <a href="http://www.mayassin.com"> © 2017 Mohamed Yassin</a>
+                <a class="grey-text text-lighten-4 right" href="login.html">Admin Login</a>
+            </div>
+        </div>
+    </footer>
+
+</html>

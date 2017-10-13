@@ -1,0 +1,41 @@
+.full-container{
+    padding-top: 16px;
+}
+.car-list-item {
+    height: auto;
+    float: none;
+    object-fit: cover;
+    margin-bottom: 0px;
+}
+.car-list-item .col {
+    height:auto;
+}
+.car-list-item .col img {
+    /*padding-top: 8px;*/
+    margin-top: 16px;
+}
+.card-panel {
+    width: 100%;
+    padding: 8px;
+}
+.progress {
+    height: 4px;
+}
+.progress .invisible {
+    visibility: hidden;
+}
+.chip .delete {
+    cursor: pointer;
+    float: right;
+    font-size: 16px;
+    line-height: 32px;
+}
+.modal.modal-fixed-footer {
+    height: 92% !important;
+    top: 5% !important;
+}
+.modal {
+    width: 85% !important;
+    max-height: 92% !important;
+    top: 5% !important;
+}

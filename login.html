@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/login.css">
+
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body>
+
+<div class="container full-container">
+    <div class="valign-wrapper full-container">
+        <div class="login-container">
+            <form id="login-form" class="col s12">
+            <h3>Login</h3>
+                <h5 id="error-text" class="red-text"></h5>
+                <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" type="email" class="validate">
+                    <label for="email" data-error="wrong" data-success="right">Email Address</label>
+                </div>
+            </div><div class="row">
+                <div class="input-field col s12">
+                    <input id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                </div>
+            </div>
+                <button class="btn btn-responsive waves-effect waves-light grey" type="submit" name="action">NEXT
+                    <i class="material-icons right">navigate_next</i>
+                </button>
+            </form>
+        </div>
+</div>
+</div>
+
+
+
+
+<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/materialize.min.js"></script>
+<script src="js/plugins.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+</body>
+</html>
