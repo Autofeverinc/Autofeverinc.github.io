@@ -147,7 +147,7 @@ function loadPreLoadedCarImages(){
     for(var carID in allCars) {
         var car = allCars[carID];
         if(car.imageURLS){
-            var img = document.getElementById('img-'+car.id);
+            var img = $('#img-'+car.id);
             if(car.imageURLS[0]){
                 img.src = car.imageURLS[0];
             } else {
