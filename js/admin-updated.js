@@ -224,7 +224,7 @@ function showAllCars() {
 
 
 function addChip() {
-    var input = document.createElement('input');
+    var input = $('#file-upload');
     input.addEventListener('change', function(e){
         //Get files
         var chipImageElement="";
