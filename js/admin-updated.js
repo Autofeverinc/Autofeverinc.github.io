@@ -225,6 +225,7 @@ function showAllCars() {
 
 function addChip() {
     var input = $('#file-upload');
+    document.getElementById("fileUploadForm").reset();
     input.change(function(e){
         //Get files
         var chipImageElement="";
@@ -243,7 +244,7 @@ function addChip() {
             chipImageElement += "')\">close<\/i>";
             chipImageElement += "                        <\/div>";
         }
-
+        input.off();
         chipImages.append(chipImageElement);
     });
     input.type = 'file';
