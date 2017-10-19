@@ -39,3 +39,6 @@
     max-height: 92% !important;
     top: 5% !important;
 }
+.invisible {
+    visibility: hidden;
+}

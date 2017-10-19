@@ -320,7 +320,8 @@ main {
 }
 .card-image {
     padding: 16px;
-    height:100px;
+    height:100%;
+    width: auto;
 }
 .car-box .row {
     margin-bottom: 0px;
@@ -338,6 +339,7 @@ p.bold{
 }
 .modal .modal-content {
     padding: 0px;
+    height: calc(100% - 20px) !important;
 }
 .modal .modal-text {
     padding: 16px;
@@ -353,3 +355,10 @@ p.bold{
 }
 .carousel-slider {
 }
+.car-image-icon {
+    margin-bottom: 4px;
+}
+.object-fit_cover {
+    object-fit: cover
+}
+

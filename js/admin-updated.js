@@ -78,7 +78,7 @@ function searchTextBoxListener() {
 $( document ).ready(function() {
     console.log( "Initialized!" );
     firebase.auth().onAuthStateChanged(function(user) {
-        if (user && (user.uid == 'Lle0IlaCgwMxadNhlPmtLu2HEZg2')) {
+        if (user) {
             allCarsListener();
             searchTextBoxListener();
             //$('.modal').modal()

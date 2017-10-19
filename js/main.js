@@ -49,7 +49,7 @@ function showAllCars() {
         carElement += "')\">";
         carElement += "                                <div class=\"row\">";
         carElement += "                                    <div class=\"col s4 l2 m2\">";
-        carElement += "                                        <img id=\"img-"+carID+"\" class=\"responsive-img circle card-image\" src=\"http:\/\/via.placeholder.com\/100x100\">";
+        carElement += "                                        <img id=\"img-"+carID+"\" class=\"responsive-img card-image\" src=\"http:\/\/via.placeholder.com\/100x100\">";
         carElement += "                                    <\/div>";
         carElement += "                                    <div class=\"col s7 l9 m9\">";
         carElement += "                                        <p class=\"bold flow-text\">";
@@ -174,10 +174,12 @@ function viewCar(carID) {
         carElements += car.id;
         carElements += "\" class=\"modal modal-fixed-footer\">";
         carElements += "        <div class=\"modal-content\">";
-        carElements += "                            <div class=\"modal-content modal-text\">";
-        carElements += "                                <h5>";
-        carElements += car.year + " " + car.make + " " + car.model + " " + car.price;
-        carElements += "<\/h5>";
+        carElements += "                            <div class=\"modal-content\">";
+        carElements += "                            <div class=\"modal-text\">";
+        carElements += "                                <h3>";
+        carElements += car.year + "     " + car.make + " " + car.model + " <br><b>" + car.price+"</b>";
+        carElements += "<\/h3>";
+        carElements += " <div class=\"divider\"></div>";
         carElements += "                                <p class=\"flow-text\">";
         carElements += "                                    Doors: ";
         carElements += car.doors;
@@ -197,16 +199,23 @@ function viewCar(carID) {
         carElements += "                                    Features: ";
         carElements += car.features;
         carElements += "                                <\/p>";
-        carElements += "                            <div class=\"carousel carousel-slider car-images\" data-indicators=\"true\">";
-        carElements += "                                <div class=\"carousel-fixed-item center white-text\" >";
-        carElements += "                                    Click or Swipe to see the next images";
+        carElements += "                                <h4>";
+        carElements += "Images";
+        carElements += "<\/h4>";
+        carElements += " <div class=\"divider\"></div><br>";
+        carElements += "                            <div class=\"row car-images-small\">";
         carElements += "                                <\/div>";
-        carElements += "";
-        carElements += "";
-        carElements += "";
         carElements += "                            <\/div>";
-        carElements += "";
-        carElements += "                            <\/div>";
+        // carElements += "                            <div class=\"carousel carousel-slider car-images\" data-indicators=\"true\">";
+        // carElements += "                                <div class=\"carousel-fixed-item center white-text\" >";
+        // carElements += "                                    Swipe to see the next images";
+        // carElements += "                                <\/div>";
+        // carElements += "";
+        // carElements += "";
+        // carElements += "";
+        // carElements += "                            <\/div>";
+        // carElements += "";
+        // carElements += "                            <\/div>";
         carElements += "";
         carElements += "";
         carElements += "                    <\/div>";
@@ -245,16 +254,33 @@ function viewCar(carID) {
     }
     function addImagesToModal() {
         var carImages = $('.car-images');
-            var i = 0;
+        var carSmallImages = $('.car-images-small');
             for(var carImage in car.images){
                 storageRef.child('cars/'+car.id+'/'+car.images[carImage]).getDownloadURL().then(function(url, imageName) {
-                    $('.carousel').carousel('destroy');
-                    var anchorString="";
-                    anchorString += "<a class=\"carousel-item\" href=\"#four!\"><img src=\"";
-                    anchorString += url;
-                    anchorString += "\"><\/a>";
-                    carImages.append(anchorString);
-                    $('.carousel.carousel-slider').carousel({fullWidth: true});
+
+                    //addCarasouelImage();
+                    addSmallImage();
+
+
+                    function addCarasouelImage() {
+                        $('.carousel').carousel('destroy');
+                        var anchorString="";
+                        anchorString += "<a class=\"carousel-item\" href=\"#four!\"><img src=\"";
+                        anchorString += url;
+                        anchorString += "\"><\/a>";
+                        carImages.append(anchorString);
+                        $('.carousel.carousel-slider').carousel({fullWidth: true});
+                    }
+
+                    function addSmallImage() {
+                        var smallImageString ="";
+                        smallImageString += "                            <div class=\"col s4 m2 l1 car-image-icon\">";
+                        smallImageString += "<img class=\"materialboxed\" width=\"75\"  src=\"" +url+"\">";
+                        smallImageString += "                            <\/div>";
+                        carSmallImages.append(smallImageString);
+                        $('.materialboxed').materialbox();
+                    }
+
                 }).catch(function(error) {
                     console.log(error.message);
                 });
