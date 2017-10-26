@@ -530,7 +530,7 @@ function submitEditCar(carID) {
     if(carID.valueOf() == "newCarID"){
         var idNumber = Math.floor((Math.random() * 100000) + 1);
         isNewCar = true;
-        carID = year + color + make + model + '_'+ idNumber;
+        carID = (year + color + make + model + '_'+ idNumber).replace(" ", "");
     }
 
 
