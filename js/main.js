@@ -109,37 +109,30 @@ function loadAllCars() {
             counter++;
         }
         loadPreLoadedCarImages();
-        loadCarImages(0, counter);
+        loadCarImages();
 
     });
 
-    function loadCarImages(position, counter) {
+    function loadCarImages() {
         var localPos = 0;
         for(var carID in allCars){
-            if(position > counter) { break;}
-            if(position > localPos){
-                localPos++;
-                continue;
-            }
             var car = allCars[carID];
-            if(car.images && !car.imageURLS[0]){
-                storageRef.child('cars/'+car.id+'/'+car.images[0]).getDownloadURL().then(function(url) {
-                    var img = document.getElementById('img-'+car.id);
-                    img.src = url;
-                    allCars[car.id].imageURLS[0] = url;
-                    loadCarImages(++position, counter);
-                    stopProgressBar();
-                }).catch(function(error) {
-                    console.log(error.message);
-                });
-                break;
-            } else {
-                loadCarImages(++position, counter);
-            }
+            loadImageFromServer(car);
         }
 
 
 
+    }
+
+    function loadImageFromServer(car) {
+        storageRef.child('cars/'+car.id+'/'+car.images[0]).getDownloadURL().then(function(url) {
+            var img = document.getElementById('img-'+car.id);
+            img.src = url;
+            allCars[car.id].imageURLS[0] = url;
+            stopProgressBar();
+        }).catch(function(error) {
+            console.log(error.message);
+        });
     }
 }
 
