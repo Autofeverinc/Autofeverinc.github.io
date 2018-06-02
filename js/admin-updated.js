@@ -11,6 +11,9 @@ function Car() {
     this.features= "";
     this.mileage = "";
     this.images = "";
+    this.firstImage = "";
+    this.time = 0;
+    this.firstImageURL = "";
     this.imageURLS = [];
     this.visible = true;
 }
@@ -43,42 +46,77 @@ function searchTextBoxListener() {
 
 
 
-        var searchText = $('#search').val();
-        if(!searching) {
-            searching = true;
-        }
-
-        if(!searchText && searching) {
-            searching = false;
+        var curSearch = $('#search').val();
+        if(curSearch.length < 3) {
             allCars = origAllCars;
+            searching = false;
             showAllCars();
-            loadPreLoadedCarImages();
-            return;
+        } else {
+            searching = true;
+            searchForCar(curSearch);
         }
-
-        var matchingCars = [];
-        for(var carID in origAllCars) {
-            searchText = sanitizeInput(searchText).toLowerCase();
-            var car = origAllCars[carID];
-            if(car.make.toLowerCase().indexOf(searchText) !== -1 ||
-                car.model.toLowerCase().indexOf(searchText) !== -1 ||
-                car.year.toLowerCase().indexOf(searchText) !== -1 ||
-                car.color.toLowerCase().indexOf(searchText) !== -1
-            ){
-                matchingCars[carID] = car;
-            }
-        }
-
-        allCars = matchingCars;
-        showAllCars();
-        loadPreLoadedCarImages();
     });
 }
+
+function forceSearch() {
+    var curSearch = $('#search').val();
+    searching = true;
+    searchForCar(curSearch);
+}
+
+function searchForCar(searchText) {
+    searchText = searchText.toUpperCase();
+    var carsRef = database.ref('/cars/');
+    var searchMake = carsRef.orderByChild('make')
+        .startAt(searchText)
+        .endAt(searchText+"\uf8ff");
+    var searchModel = carsRef.orderByChild('model')
+        .startAt(searchText)
+        .endAt(searchText+"\uf8ff");
+    var searchYear = carsRef.orderByChild('year')
+        .startAt(searchText)
+        .endAt(searchText+"\uf8ff");
+    var searchColor = carsRef.orderByChild('color')
+        .startAt(searchText)
+        .endAt(searchText+"\uf8ff");
+
+    allCars = [];
+    searchMake.once('value').then(function (snapshot) {
+        var carsData = snapshot.val();
+        $.each(carsData, function(carID, carObject) {
+            parseCarDataItem(carID, carObject);
+        });
+        showAllCars();
+    });
+    searchModel.once('value').then(function (snapshot) {
+        var carsData = snapshot.val();
+        $.each(carsData, function(carID, carObject) {
+            parseCarDataItem(carID, carObject);
+        });
+        showAllCars();
+    });
+    searchYear.once('value').then(function (snapshot) {
+        var carsData = snapshot.val();
+        $.each(carsData, function(carID, carObject) {
+            parseCarDataItem(carID, carObject);
+        });
+        showAllCars();
+    });
+    searchColor.once('value').then(function (snapshot) {
+        var carsData = snapshot.val();
+        $.each(carsData, function(carID, carObject) {
+            parseCarDataItem(carID, carObject);
+        });
+        showAllCars();
+    });
+}
+
 
 $( document ).ready(function() {
     console.log( "Initialized!" );
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
+            allCars = [];
             allCarsListener();
             searchTextBoxListener();
             //$('.modal').modal()
@@ -99,124 +137,122 @@ function logOut() {
 
 
 function allCarsListener() {
+
+
     carsRef = database.ref('/cars/');
-    carsRef.on('value', function(snapshot) {
+    carsRef.orderByChild("time").limitToLast(41).on('value', function(snapshot) {
+        if(searching)
+            return;
 
         var carsData = snapshot.val();
-        allCars = [];
         $.each(carsData, function(carID, carObject) {
-            var car = new Car();
-            car.id = carID;
-            car.make = carObject["make"];
-            car.model = carObject["model"];
-            car.year = carObject["year"];
-            car.color = carObject["color"];
-            car.features = carObject["features"];
-            car.images = carObject["images"];
-            car.vin = carObject["vin"];
-            car.doors = carObject["doors"];
-            car.visible = carObject["visible"];
-            car.price = carObject["price"];
-            car.trans = carObject["trans"];
-            car.mileage = carObject["mileage"];
-            if(car.images){
-                car.images = car.images.split(',');
-            }
-            Object.keys(car).forEach(function(key,index) {
-                if(car[key] == undefined){
-                    car[key] = "";
-                }
-            });
-            allCars[carID] = car;
-            origAllCars[carID] = car;
+            parseCarDataItem(carID, carObject);
         });
-        showAllCars();
-        var counter = 0;
-        for(var car in allCars){
-            counter++;
-        }
-        loadPreLoadedCarImages();
-        loadCarImages(0, counter);
 
+        allCars = allCars.sort();
+
+        origAllCars = allCars;
+        showAllCars();
     });
 
-    function loadCarImages(position, counter) {
-        var localPos = 0;
-        for(var carID in allCars){
-            if(position > counter) { break;}
-            if(position > localPos){
-                localPos++;
-                continue;
-            }
-            var car = allCars[carID];
-            if(car.images && !car.imageURLS[0]){
-                storageRef.child('cars/'+car.id+'/'+car.images[0]).getDownloadURL().then(function(url) {
-                    var img = document.getElementById('img-'+car.id);
-                    img.src = url;
-                    allCars[car.id].imageURLS[0] = url;
-                    loadCarImages(++position, counter);
-                    stopProgressBar();
-                }).catch(function(error) {
-                    console.log(error.message);
-                });
-                break;
-            } else {
-                loadCarImages(++position, counter);
-            }
-        }
 
-
-
-    }
 }
 
-function loadPreLoadedCarImages(){
-    for(var carID in allCars) {
-        var car = allCars[carID];
-        if(car.imageURLS){
-            var img = document.getElementById('img-'+car.id);
-            if(car.imageURLS[0]){
-                img.src = car.imageURLS[0];
-            } else {
-                img.src = "http://via.placeholder.com/100x100";
-            }
-        }
+
+function getCarFirstImage(carid, imageName, carCount) {
+    if(imageName == null || imageName == "") return;
+    storageRef.child('cars/'+carid+'/'+imageName).getDownloadURL().then(function(url) {
+        var currentRow = $('#car-' + carCount);
+        currentRow.find("td.imgpreview img").attr("src", url);
+        allCars[carid].firstImageURL = url;
+    }).catch(function(error) {
+        console.log(error.message);
+    });
+}
+
+function parseCarDataItem(carID, carObject) {
+    var car = new Car();
+    car.id = carID;
+    car.make = carObject["make"];
+    car.model = carObject["model"];
+    car.year = carObject["year"];
+    car.color = carObject["color"];
+    car.features = carObject["features"];
+    car.images = carObject["images"];
+    car.vin = carObject["vin"];
+    car.doors = carObject["doors"];
+    car.visible = carObject["visible"];
+    car.price = carObject["price"];
+    car.trans = carObject["trans"];
+    car.firstImage = carObject["firstImage"];
+    car.time = carObject["time"];
+    car.mileage = carObject["mileage"];
+    if(car.images){
+        car.images = car.images.split(',');
     }
+
+    if(car.firstImage == "") {
+        car.firstImage = car.images[0];
+    }
+
+    Object.keys(car).forEach(function(key,index) {
+        if(car[key] == undefined){
+            car[key] = "";
+        }
+    });
+    allCars[carID] = car;
 }
 
 
 function showAllCars() {
-    var carsContainer = $('.cars-container');
-    carsContainer.html("");
-    var carElements = "";
+    var counter = 0;
+    var currentRow;
+    var car;
     for(var carID in allCars){
-        var car = allCars[carID];
-        var archived = (car.visible === true) ? "" : "grey lighten-3";
-        carElements += "            <div class=\"card-panel waves-effect waves-green car-list-item "+ archived +
-            "\" onclick=\"editCar('";
-        carElements += car.id;
-        carElements += "')\">";
-        carElements += "                <div class=\"row\">";
-        carElements += "                    <div class=\"col l2 s4 m2\">";
-        carElements += "                        <img id=\"img-"+carID+"\"  class=\"circle responsive-img\" src=\"http:\/\/via.placeholder.com\/100x100\">";
-        carElements += "                    <\/div>";
-        carElements += "                    <div class=\"col s6 m9\">";
-        carElements += "                        <div class=\"flow-text\">";
-        carElements += "                            <h6 >";
-        carElements += "                                " + car.year +" "+car.color+" "+ car.make + " " + car.model + " " + car.vin;
-        carElements += "                            <\/h6>";
-        carElements += "                            <h6 class=\"flow-text truncate\">";
-        carElements += "                                " + car.doors +" doors " + car.trans+ "<br>" +(car.features ? car.features : "N/A");
-        carElements += "                            <\/h6>";
-        carElements += "                        <\/div>";
-        carElements += "                    <\/div>";
-        carElements += "                    <div class=\"col s1\">";
-        carElements += "                        <p class=\"flow-text grey-text\"><i class=\"material-icons\">mode_edit<\/i><\/p>";
-        carElements += "                    <\/div>";
-        carElements += "                <\/div>";
-        carElements += "            <\/div>";
+        car = allCars[carID];
+
+        if(!car.visible) {
+            continue;
+        }
+
+        currentRow = $('#car-' + counter);
+        currentRow.removeClass('grey lighten-3');
+        currentRow.attr("onclick","editCar('"+car.id+"')");
+        currentRow.children("td.make").html(car.make);
+        currentRow.children("td.model").html(car.model);
+        currentRow.children("td.year").html(car.year);
+        currentRow.children("td.color").html(car.color);
+        getCarFirstImage(carID,car.firstImage, counter);
+        counter ++;
     }
-    carsContainer.append(carElements);
+
+    for(var carID in allCars) {
+        car = allCars[carID];
+        if(car.visible) {
+            continue;
+        }
+        currentRow = $('#car-' + counter);
+        currentRow.addClass('grey lighten-3');
+        currentRow.attr("onclick","editCar('"+car.id+"')");
+        currentRow.children("td.make").html(car.make);
+        currentRow.children("td.model").html(car.model);
+        currentRow.children("td.year").html(car.year);
+        currentRow.children("td.color").html(car.color);
+        getCarFirstImage(carID,car.firstImage, counter);
+        counter ++;
+    }
+    while(counter < 41) {
+        currentRow = $('#car-' + counter);
+        currentRow.removeClass('grey lighten-3');
+        currentRow.attr("onclick","");
+        currentRow.children("td.make").html("");
+        currentRow.children("td.model").html("");
+        currentRow.children("td.year").html("");
+        currentRow.children("td.color").html("");
+        currentRow.children("td.imgpreview").html("");
+        counter ++;
+    }
+
     stopProgressBar();
 }
 
@@ -373,7 +409,14 @@ function editCar(carID) {
         carElements += "\" id=\"trans\" type=\"text\" class=\"validate\">";
         carElements += "                            <label for=\"trans\">Trans<\/label>";
         carElements += "                        <\/div>";
+        carElements += "<div class=\"input-field col s12 m6 l3\">";
+        carElements += "                            <input value=\"" +
+            (car.firstImage ? car.firstImage : (car.images ? car.images[0] : "") ) +
+            "\" id=\"firstImage\" type=\"text\" class=\"validate\">";
+        carElements += "                            <label for=\"firstImage\">First Image<\/label>";
+        carElements += "                        <\/div>";
         carElements += "                    <\/div>";
+
         carElements += "                    <div class=\"row\">";
         carElements += "                        <div class=\"input-field col s12\">";
         carElements += "                            <textarea id=\"features\" class=\"materialize-textarea\"><\/textarea>";
@@ -515,17 +558,20 @@ function submitEditCar(carID) {
 
     var form = $('#'+carID).find( "form" );
     var features = form.find('.materialize-textarea').val();
-    var make = $('#make').val();
+    var make = $('#make').val().toUpperCase();
     var year = $('#year').val();
-    var color = $('#color').val();
-    var model = $('#model').val();
+    var color = $('#color').val().toUpperCase();
+    var model = $('#model').val().toUpperCase();
     var vin = $('#vin').val();
     var doors = $('#doors').val();
     var price = $('#price').val();
     var mileage = $('#mileage').val();
     var trans = $('#trans').val();
+    var firstImage = $('#firstImage').val() != null ? $('#firstImage').val() : "";
     var imagesInput = [];
     var imagesToUpload = [];
+
+
 
     if(carID.valueOf() == "newCarID"){
         var idNumber = Math.floor((Math.random() * 100000) + 1);
@@ -541,6 +587,7 @@ function submitEditCar(carID) {
 
 
     var carRef = database.ref('cars/' + carID);
+    var curTime = Date.now();
     if(isNewCar){
         carRef.set({
             make:  make,
@@ -551,7 +598,9 @@ function submitEditCar(carID) {
             price: price,
             mileage: mileage,
             doors: doors,
+            firstImage : firstImage,
             trans: trans,
+            time: curTime,
             visible : true,
             features: features
         }).then(function () {
@@ -568,6 +617,8 @@ function submitEditCar(carID) {
             doors: doors,
             price: price,
             mileage: mileage,
+            firstImage : firstImage,
+            time: curTime,
             trans: trans,
             visible : true,
             features: features
@@ -629,11 +680,11 @@ function submitEditCar(carID) {
         // Compresses the imagefile objects and then uploads those to the server
         for(var imageFile in imageFiles) {
             new ImageCompressor(imageFiles[imageFile], {
-                quality: .8,
-                maxWidth: 1200,
-                maxHeight: 1200,
-                minWidth: 1000,
-                minHeight: 1000,
+                quality: .6,
+                maxWidth: 800,
+                maxHeight: 800,
+                minWidth: 300,
+                minHeight: 300,
                 success(result) {
                     uploadImageAsPromise(result);
                 },

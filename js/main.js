@@ -11,6 +11,8 @@ function Car() {
     this.features= "";
     this.mileage = "";
     this.images = "";
+    this.firstImage = "";
+    this.firstImageURL = "";
     this.imageURLS = [];
     this.visible = true;
 }
@@ -66,8 +68,18 @@ function showAllCars() {
         carElement += "                        <\/div>";
         carElement += "                    <\/div>";
         carElement += "                <\/div>";
+
     }
     carsContainer.append(carElement);
+
+    for(var carID in allCars){
+        var car = allCars[carID];
+        if(!car.visible) {
+            continue;
+        }
+
+        getCarFirstImage(carID, car.firstImage);
+    }
     stopProgressBar();
 }
 
@@ -79,6 +91,8 @@ function loadAllCars() {
         allCars = [];
         $.each(carsData, function(carID, carObject) {
             var car = new Car();
+            if(!carObject["visible"])
+                return true;
             car.id = carID;
             car.make = carObject["make"];
             car.model = carObject["model"];
@@ -89,11 +103,16 @@ function loadAllCars() {
             car.vin = carObject["vin"];
             car.doors = carObject["doors"];
             car.visible = carObject["visible"];
+            car.trans = carObject["trans"];
+            car.firstImage = carObject["firstImage"];
             car.price = carObject["price"];
             car.trans = carObject["trans"];
             car.mileage = carObject["mileage"];
             if(car.images){
                 car.images = car.images.split(',');
+            }
+            if(car.firstImage == "") {
+                car.firstImage = car.images[0];
             }
             Object.keys(car).forEach(function(key,index) {
                 if(car[key] == undefined){
@@ -109,31 +128,19 @@ function loadAllCars() {
             counter++;
         }
         loadPreLoadedCarImages();
-        loadCarImages();
 
     });
 
-    function loadCarImages() {
-        var localPos = 0;
-        for(var carID in allCars){
-            var car = allCars[carID];
-            loadImageFromServer(car);
-        }
+}
 
-
-
-    }
-
-    function loadImageFromServer(car) {
-        storageRef.child('cars/'+car.id+'/'+car.images[0]).getDownloadURL().then(function(url) {
-            var img = document.getElementById('img-'+car.id);
-            img.src = url;
-            allCars[car.id].imageURLS[0] = url;
-            stopProgressBar();
-        }).catch(function(error) {
-            console.log(error.message);
-        });
-    }
+function getCarFirstImage(carid, imageName) {
+    if(imageName == null || imageName == "") return;
+    storageRef.child('cars/'+carid+'/'+imageName).getDownloadURL().then(function(url) {
+        $('#img-' + carid).attr("src", url);
+        allCars[carid].firstImageURL = url;
+    }).catch(function(error) {
+        console.log(error.message);
+    });
 }
 
 function loadPreLoadedCarImages(){

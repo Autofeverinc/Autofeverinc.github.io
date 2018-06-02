@@ -42,3 +42,6 @@
 .invisible {
     visibility: hidden;
 }
+.clickable {
+    cursor: pointer;
+}
